@@ -16,8 +16,8 @@ This role requires FreeBSD, or a Debian or RHEL based Linux distribution. It
 might work with other software versions, but does work with the following
 specific software and versions:
 
-* Ansible: 2.8.4
-* Vault: 1.3.2
+* Ansible: 2.9
+* Vault: 1.4.0
 * Debian
   - Debian 10 (buster)
   - Debian 9 (stretch)
@@ -26,6 +26,51 @@ specific software and versions:
 * Ubuntu 18.04
 
 Sorry, there is no planned support at the moment for Windows.
+
+## Automatic provisionning
+If you wanted to automatically setup an environment on GCP to welcome this vault cluster before using this repo, go to:
+https://github.com/skulblaka24/terraform-gcp-hashistack
+
+## Cluster configuration
+To automatically configure vault with Raft and GCP auto unseal use after:
+https://github.com/skulblaka24/ansible-vault-configuration
+
+## Inventory example
+[vault_instances]
+$FQDN$ vault_raft_node_id='vault-node1' vault_tls_cert_file='$CERTIFICATE$.crt' vault_tls_key_file='$CERTIFICATE$.key'
+
+## Launching playbook example
+- name: Install Vault
+  hosts: vault_instances
+  any_errors_fatal: true
+  user: $USER$
+  become: true
+  become_user: root
+  tags:
+   - vault
+  roles:
+   - { role: install-vault } # It will install vault on the vms.
+  vars:
+   ansible_ssh_user: "$USER$"
+   vault_iface: "eth0"
+   vault_install_remotely: true
+   vault_version: 1.4.0
+   vault_api_addr: "https://{{inventory_hostname}}:8200"
+   vault_pkg: "vault_{{vault_version}}+ent_linux_amd64.zip"
+   vault_checksum_file_url: "https://releases.hashicorp.com/vault/{{vault_version}}+ent/vault_{{vault_version}}+ent_SHA256SUMS"
+   vault_zip_url: "https://releases.hashicorp.com/vault/{{vault_version}}+ent/vault_{{vault_version}}+ent_linux_amd64.zip"
+   vault_max_lease_ttl: "87600h"
+   vault_plugin_path: "etc/vault/plugins"
+   vault_ui: true
+   vault_tls_disable: false
+   vault_tls_src_files: "../certs"
+   validate_certs_during_api_reachable_check: false
+   vault_telemetry_enabled: true
+   vault_prometheus_retention_time: "30s"
+   vault_telemetry_disable_hostname: true
+   vault_backend: "raft"
+   vault_data_path: "/var/vault"
+   vault_dns_disable: false
 
 ## Role Variables
 
@@ -906,3 +951,4 @@ BSD-2-Clause
 
 Special thanks to the folks listed in [CONTRIBUTORS.md](https://github.com/brianshumate/ansible-vault/blob/master/CONTRIBUTORS.md) for their
 contributions to this project.
+And thanks to Planetrobbie that added the raft configuration into his playbook from which this repo was forked.
