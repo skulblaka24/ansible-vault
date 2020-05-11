@@ -36,11 +36,11 @@ To automatically configure vault with Raft and GCP auto unseal use after:
 https://github.com/skulblaka24/ansible-vault-configuration
 
 ## Inventory example
-[vault_instances]
-$FQDN$ vault_raft_node_id='vault-node1' vault_tls_cert_file='$CERTIFICATE$.crt' vault_tls_key_file='$CERTIFICATE$.key'
+<pre><code>[vault_instances]
+$FQDN$ vault_raft_node_id='vault-node1' vault_tls_cert_file='$CERTIFICATE$.crt' vault_tls_key_file='$CERTIFICATE$.key'<\pre><\code>
 
 ## Launching playbook example
-- name: Install Vault
+<pre><code>- name: Install Vault
   hosts: vault_instances
   any_errors_fatal: true
   user: $USER$
@@ -70,7 +70,7 @@ $FQDN$ vault_raft_node_id='vault-node1' vault_tls_cert_file='$CERTIFICATE$.crt' 
    vault_telemetry_disable_hostname: true
    vault_backend: "raft"
    vault_data_path: "/var/vault"
-   vault_dns_disable: false
+   vault_dns_disable: false<\pre><\code>
 
 ## Role Variables
 
