@@ -37,7 +37,8 @@ https://github.com/skulblaka24/ansible-vault-configuration
 
 ## Inventory example
 <pre><code>[vault_instances]
-$FQDN$ vault_raft_node_id='vault-node1' vault_tls_cert_file='$CERTIFICATE$.crt' vault_tls_key_file='$CERTIFICATE$.key'<\pre><\code>
+$FQDN$ vault_raft_node_id='vault-node1' vault_tls_cert_file='$CERTIFICATE$.crt' vault_tls_key_file='$CERTIFICATE$.key'
+</pre></code>
 
 ## Launching playbook example
 <pre><code>- name: Install Vault
@@ -70,7 +71,8 @@ $FQDN$ vault_raft_node_id='vault-node1' vault_tls_cert_file='$CERTIFICATE$.crt' 
    vault_telemetry_disable_hostname: true
    vault_backend: "raft"
    vault_data_path: "/var/vault"
-   vault_dns_disable: false<\pre><\code>
+   vault_dns_disable: false
+</pre></code>
 
 ## Role Variables
 
