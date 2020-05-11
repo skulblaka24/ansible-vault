@@ -1,0 +1,19 @@
+---
+# File: tasks/dns.yml - DNS tasks for Vault
+
+- name: Get google nameserver information
+  shell: "nslookup $(cat /tmp/.ns.tmp| awk 'NR==1{print substr($1, 1, length($1)-1) }') | awk 'NR==6{print $2}'"
+  register: vault_ns
+  delegate_to: localhost
+
+- name: Remove a line from the file
+  lineinfile:
+    path: "/etc/resolv.conf"
+    regexp: "^nameserver"
+    state: absent
+
+- name: Configure DNS
+  lineinfile:
+    path: "/etc/resolv.conf"
+    line: "nameserver {{ item }}"
+  with_items: "{{ vault_ns.stdout }}"

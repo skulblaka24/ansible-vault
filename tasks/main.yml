@@ -127,6 +127,11 @@
     mode: "0600"
   when: vault_gkms | bool
 
+- name: Assert that configuration file exists
+  stat:
+    path: "{{ vault_main_config }}"
+  register: install_vault_main_conf_hcl
+
 - name: Vault main configuration
   become: true
   template:
@@ -136,7 +141,7 @@
     group: "{{ vault_group }}"
     mode: "0400"
   notify: Restart vault
-
+  when: not install_vault_main_conf_hcl.stat.exists
 
 - name: BSD init script
   template:
@@ -274,3 +279,7 @@
     msg: "Vault is {{ vault_http_status[check_result.status|string] }}"
   tags:
     - check_vault
+
+# - name: DNS configuration
+#   include: ../tasks/dns.yml
+#   when: vault_dns_disable == 0
